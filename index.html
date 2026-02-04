@@ -1,35 +1,242 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>💖</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #ffe6ee;
-      text-align: center;
-      padding: 40px;
-    }
-    button {
-      padding: 15px 25px;
-      font-size: 18px;
-      border: none;
-      border-radius: 10px;
-      background: #ff4d6d;
-      color: white;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Une surprise pour toi</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff0f3;
+            color: #4a4a4a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 450px;
+            width: 90%;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        h1 { color: #ff4d6d; font-size: 1.5rem; }
+        p { line-height: 1.6; font-size: 1.1rem; }
+
+        button {
+            background-color: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        button:hover { transform: scale(1.05); }
+        .hidden { display: none !important; }
+
+        /* --- STYLE DU CARNET (Flipbook) --- */
+        .book-container {
+            perspective: 1000px;
+            width: 300px;
+            height: 380px;
+            margin: 10px auto;
+        }
+
+        .book {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .page {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: left;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+            cursor: pointer;
+        }
+
+        .page.flipped { transform: rotateY(-180deg); }
+
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border-radius: 5px 15px 15px 5px;
+            box-shadow: inset 3px 0 10px rgba(0,0,0,0.05), 5px 5px 15px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            border: 1px solid #ffccd5;
+            background: #fffafa;
+        }
+
+        .back { transform: rotateY(180deg); background: #ffffff; color: #eee; } /* Verso vide */
+        .cover { background: #ff4d6d !important; color: white !important; }
+
+        #noButton { background-color: #6c757d; position: relative; z-index: 1000; }
+    </style>
 </head>
 <body>
 
-  <h1>Hello LINGOM Juste </h1>
- 
+    <div id="step1" class="card">
+        <h1>Bonjour LINGOM Juste 👀</h1>
+        <button onclick="showStep(2)">Continuer</button>
+    </div>
 
-  <button onclick="alert('La suite arrive 💌')">
-    Continuer
-  </button>
+    <div id="step2" class="card hidden">
+        <p>Avant de continuer, je tiens à m'excuser pour ce matin. J'ai été dure et j'ai dit des choses méchantes pour rien. Sorry 😞</p>
+        <button onclick="showStep(3)">Veux-tu bien continuer ? 🥺</button>
+    </div>
 
+    <div id="step3" class="card hidden">
+        <p>J'ai vu quelque chose sur Instagram et du coup, je veux essayer...</p>
+        <button onclick="showStep(4)">Allons-y !</button>
+    </div>
+
+    <div id="step4" class="card hidden">
+        <p>La Saint-Valentin approche et j'ai voulu faire un truc original par plaisir, et puis ceci me permet de tester une fois mes "talents de codeuse en herbe".</p>
+        <p>⬇️ ⬇️ </p>
+        <button onclick="showStep(5)" style="font-size: 1.5rem;">Continuer </button>
+    </div>
+
+    <div id="step5" class="card hidden">
+        <h1>Veux-tu être mon Valentin ❤️ ?</h1>
+        <p>Impossible de me dire non 👀!</p>      
+        <div style="margin-top: 20px;">
+            <button id="yesButton" onclick="showStep(6)">OUI</button>
+            <button id="noButton" onmouseover="moveNo()" onclick="moveNo()">NON</button>
+        </div>
+    </div>
+
+    <div id="step6" class="card hidden">
+        <h1>Félicitations Monsieur LINGOM! 🎉</h1>
+        <p>Vous êtes désormais à moi et rien qu'à moi. En plus tu as gagné une surprise !</p>
+        <button onclick="showStep(7)">Voir la surprise</button>
+    </div>
+
+    <div id="step7" class="card hidden" style="max-width: 550px;">
+        <h1>Ton Carnet de Bons 📖</h1>
+        <p style="font-size: 0.8rem;">(Clique sur les feuilles pour tourner)</p>
+        
+        <div class="book-container">
+            <div class="book">
+                <div class="page" onclick="this.classList.toggle('flipped')" style="z-index: 8;">
+                    <div class="front cover">
+                        <h2>Carnet de Cadeaux</h2>
+                        <p>Pour mon Valentin ❤️</p>
+                        <p style="font-size: 0.7rem;">(1 bon = 1 utilisation)</p>
+                        <p style="margin-top:20px">Ouvrir ➔</p>
+                    </div>
+                    <div class="back">✨</div>
+                </div>
+
+                <div class="page" onclick="this.classList.toggle('flipped')" style="z-index: 7;">
+                    <div class="front">
+                        <h3>Bon n°1</h3>
+                        <p>🫂 Un câlin tout de suite.</p>
+                    </div>
+                    <div class="back">✨</div>
+                </div>
+
+                <div class="page" onclick="this.classList.toggle('flipped')" style="z-index: 6;">
+                    <div class="front">
+                        <h3>Bon n°2</h3>
+                        <p>💆‍♂️ Un massage quand tu veux et où tu veux.</p>
+                    </div>
+                    <div class="back">✨</div>
+                </div>
+
+                <div class="page" onclick="this.classList.toggle('flipped')" style="z-index: 5;">
+                    <div class="front">
+                        <h3>Bon n°3</h3>
+                        <p>🍝 Ton plat préféré cuisiné par mes soins.</p>
+                        <p style="font-size:0.7rem; color: #999;">(L'IA a proposé ça, je ne promets rien mais je vais essayer !)</p>
+                    </div>
+                    <div class="back">✨</div>
+                </div>
+
+                <div class="page" onclick="this.classList.toggle('flipped')" style="z-index: 4;">
+                    <div class="front">
+                        <h3>Bon n°4</h3>
+                        <p>🎬 Une soirée cinéma (tu choisis le film !).</p>
+                    </div>
+                    <div class="back">✨</div>
+                </div>
+
+                <div class="page" onclick="this.classList.toggle('flipped')" style="z-index: 3;">
+                    <div class="front">
+                        <h3>Bon n°5</h3>
+                        <p>🔞 Tu décides, j'exécute.</p>
+                    </div>
+                    <div class="back">✨</div>
+                </div>
+
+                <div class="page" onclick="this.classList.toggle('flipped')" style="z-index: 2;">
+                    <div class="front">
+                        <h3>Bon n°6</h3>
+                        <p>🍦 Une sortie glace ou dessert.</p>
+                    </div>
+                    <div class="back">✨</div>
+                </div>
+
+                <div class="page" onclick="this.classList.toggle('flipped')" style="z-index: 1;">
+                    <div class="front">
+                        <h3>Bon n°7</h3>
+                        <p>🃏 Un joker : "Tu choisis le bon que tu pourras réutiliser une seconde fois".</p>
+                    </div>
+                    <div class="back">✨</div>
+                </div>
+            </div>
+        </div>
+
+        <a href="carnet.pdf" download="Mon_Carnet_Juste.pdf" style="text-decoration: none;">
+            <button style="background-color: #28a745;">📥 Télécharger le carnet (PDF)</button>
+        </a>
+    </div>
+
+    <script>
+        function showStep(stepNumber) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => card.classList.add('hidden'));
+            document.getElementById('step' + stepNumber).classList.remove('hidden');
+        }
+
+        function moveNo() {
+            const btn = document.getElementById('noButton');
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            btn.style.position = 'fixed';
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+            btn.innerText = "Impossible de dire NON j'ai dit ! 😉";
+        }
+    </script>
 </body>
 </html>
